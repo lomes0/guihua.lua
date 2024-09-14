@@ -257,15 +257,15 @@ end
 local function add_augroup(bufnr)
   local augroup = _make_augroup_name(api.nvim_get_current_tabpage())
   log('augroup', augroup, 'buf', bufnr)
-  local au = api.nvim_create_autocmd({ 'CursorHold', 'CursorHoldI' }, {
-    buffer = bufnr,
-    group = augroup,
-    callback = function()
-      log('on hover')
-      require('guihua.panel').on_hover()
-    end,
-    desc = 'Hover on cursor hold',
-  })
+  --local au = api.nvim_create_autocmd({ 'CursorHold', 'CursorHoldI' }, {
+  --  buffer = bufnr,
+  --  group = augroup,
+  --  callback = function()
+  --    log('on hover')
+  --    require('guihua.panel').on_hover()
+  --  end,
+  --  desc = 'Hover on cursor hold',
+  --})
 
   api.nvim_create_autocmd({
     'CursorMoved',
@@ -396,8 +396,10 @@ function Panel:redraw(recreate)
   local win = api.nvim_get_current_win()
   if Panel:is_open() then
     if recreate then
+      --local pos = api.nvim_win_get_cursor(win)
       Panel.activePanel:open(false, true, buf)
       api.nvim_set_current_win(win)
+      --api.nvim_win_set_cursor(win, pos)
       return
     end
     if Panel.activePanel == nil then
@@ -407,8 +409,10 @@ function Panel:redraw(recreate)
     end
     if Panel.activePanel.last_parsed_buf ~= buf or vim.bo.filetype == 'guihua' then
       log('swap buffer')
+      --local pos = api.nvim_win_get_cursor(win)
       Panel.activePanel:open(false, true, buf)
       api.nvim_set_current_win(win)
+      --api.nvim_win_set_cursor(win, pos)
     end
   end
 end
@@ -417,12 +421,12 @@ local function run_on_buf_enter()
   local tabpage = api.nvim_get_current_tabpage()
   local augroup = _make_augroup_name(tabpage)
 
-  api.nvim_create_autocmd({ 'BufEnter' }, {
-    callback = function()
-      require('guihua.panel').redraw(false)
-    end,
-    group = augroup,
-  })
+  --api.nvim_create_autocmd({ 'BufEnter' }, {
+  --  callback = function()
+  --    require('guihua.panel').redraw(false)
+  --  end,
+  --  group = augroup,
+  --})
 end
 
 local function close_on_buf_win_leave()
